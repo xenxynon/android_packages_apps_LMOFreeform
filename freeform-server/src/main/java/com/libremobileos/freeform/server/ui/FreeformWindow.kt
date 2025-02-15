@@ -393,7 +393,9 @@ class FreeformWindow(
     fun close() {
         dlog(TAG, "close()")
         runCatching {
-            SystemServiceHolder.activityTaskManager.removeTask(freeformTaskStackListener!!.taskId)
+            freeformTaskStackListener?.let {
+            SystemServiceHolder.activityTaskManager.removeTask(it.taskId)
+        } ?: Slog.e(TAG, "freeformTaskStackListener is null in close()")
             removeView()
         }.onFailure { exception ->
             Slog.e(TAG, "removeTask failed: ", exception)
